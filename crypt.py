@@ -7,25 +7,24 @@ from Crypto.Random import get_random_bytes
 class Crypt:
     ##encrypt/decrypt using aes(CBC), des & rc4.
     def __init__(self):
-        self.aes_key = b'AES KEY'
+        self.aes_key = get_random_bytes(16)
         self.des_key = b'-8B kEY-'
-        self.rc4_key = b'RC4 KEY'
-        self.aes = AES.new(self.aes_key, AES.MODE_CBC)
+        self.rc4_key = get_random_bytes(16)
+        self.nonce = "JustRandomNonce"
+        self.aes = AES.new(self.aes_key, AES.MODE_CTR, self.nonce)
         self.des = DES.new(self.des_key, DES.MODE_OFB)
         self.rc4 = ARC4.new(self.rc4_key)
 
-    def encrypt_AES(self,data):
-        data = self.add_padding(data)
-        self.startTime()
-        cypher_text  = self.aes.encrypt(data)
-        self.endTime()
+    def encrypt_AES(self,plain_text):
+        plain_text = self.add_padding(plain_text)
+        cypher_text  = self.aes.encrypt(plain_text)
 
-        time = self.end - self.start
+        return cypher_text
 
-        return cypher_text, time
+    def decrypt_AES(self, cypher_text):
+        plain_text = self.remove_padding(self.aes.decrypt(cypher_text))
 
-    def decrypt_AES(self):
-        pass
+        return plain_text
 
     def encrypt_DES(self):
         pass
@@ -41,11 +40,16 @@ class Crypt:
 
     def add_padding(self, data):
         return pad(data, AES.block_size)
+    
+    def remove_padding(self, data):
+        return unpad(data, AES.block_size)
 
-    def start_time(self):
-        self.start = time.time()
-
-    def end_time(self):
-        self.end = time.time()
+    def get_keys(self):
+        return {
+            "aes": self.aes_key,
+            "des": self.des_key,
+            "rc4": self.rc4_key,
+            "nonce": self.nonce
+        }
 
 
