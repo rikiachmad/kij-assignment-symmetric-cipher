@@ -23,11 +23,12 @@ class App:
                     outfile.write(encryptor.encrypt(chunk))
 
         client = Client(port = 5001)
-        client.send_file(out_filename)
+        client.send_file(in_filename)
         
     def receive_file(self):
         server = Server(port = 5001)
         server.receive_file()
+        filename, filesize = server.get_file_info
         # create decryptor
 
     def file_exist(self, filename):

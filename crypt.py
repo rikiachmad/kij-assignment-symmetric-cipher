@@ -1,4 +1,4 @@
-import time
+import time, logging
 from base64 import b64encode, b64decode
 import Crypto
 from Crypto.Cipher import AES, DES, ARC4
@@ -63,27 +63,32 @@ class Crypt:
         }
 
 
-## Alternative Class Design
-# class Crypt:
-#     ##encrypt/decrypt using aes(CBC), des & rc4.
-#     AES = "AES"
-#     DES = "DES"
-#     RC4 = "RC4"
-#     def __init__(self, encryption=AES):
-#         self.encryption = encryption
-#         if self.encryption == AES:
-#             self.key = get_random_bytes(16)
-#             self.nonce = get_random_bytes(16)
-#             self.object = AES.new(self.key, AES.MODE_CTR, nonce = self.nonce)
+# Alternative Class Design
+class Crypt:
+    ##encrypt/decrypt using aes(CBC), des & rc4.
+    AES = "AES"
+    DES = "DES"
+    RC4 = "RC4"
+    available_alg=[AES, DES, RC4]
+    def __init__(self, cipher=AES):
+        cipher.upper()
+        if cipher not in self.available_alg:
+            logging.exception("Cipher not valid. Available cipher: AES, DES, RC4")
 
-#         self.aes_key = get_random_bytes(16)
-#         self.des_key = b'-8B kEY-'
-#         self.rc4_key = get_random_bytes(16)
-#         self.aes_nonce = get_random_bytes(16)
-#         self.des_nonce = get_random_bytes(6)
-#         self.aes = AES.new(self.aes_key, AES.MODE_CTR, nonce = self.aes_nonce)
-#         self.des = DES.new(self.des_key, DES.MODE_CTR, nonce = self.des_nonce)
-#         self.rc4 = ARC4.new(self.rc4_key)
+        self.cipher = cipher
+        if self.cipher == AES:
+            self.key = get_random_bytes(16)
+            self.nonce = get_random_bytes(16)
+            self.object = AES.new(self.key, AES.MODE_CTR, nonce = self.nonce)
 
-#     def encrypt(self, plain_text):
-#         pass
+        self.aes_key = get_random_bytes(16)
+        self.des_key = b'-8B kEY-'
+        self.rc4_key = get_random_bytes(16)
+        self.aes_nonce = get_random_bytes(16)
+        self.des_nonce = get_random_bytes(6)
+        self.aes = AES.new(self.aes_key, AES.MODE_CTR, nonce = self.aes_nonce)
+        self.des = DES.new(self.des_key, DES.MODE_CTR, nonce = self.des_nonce)
+        self.rc4 = ARC4.new(self.rc4_key)
+
+    def encrypt(self, plain_text):
+        pass

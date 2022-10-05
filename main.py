@@ -15,7 +15,7 @@ def main():
         filename = sys.argv[2]
         encryption = sys.argv[3]
         logging.info("sending file..")
-        # app.send_file(filename, encryption)
+        app.send_file(filename, encryption)
 
         logging.info("file sent successfully!")
 
