@@ -1,5 +1,6 @@
 import os, logging
 from client import Client
+from server import Server
 class App:
     
     def __init__(self):
@@ -25,7 +26,9 @@ class App:
         client.send_file(out_filename)
         
     def receive_file(self):
-        pass
+        server = Server(port = 5001)
+        server.receive_file()
+        # create decryptor
 
     def file_exist(self, filename):
         return os.path.isfile(filename)

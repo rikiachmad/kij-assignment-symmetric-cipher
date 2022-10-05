@@ -21,6 +21,7 @@ def main():
 
     elif command == "receive":
         app.receive_file()
+        logging.info("file received succesfully!")
     
     else:
         logging.exception(f"Command not found for {command}")
