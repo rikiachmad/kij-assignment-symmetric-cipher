@@ -1,44 +1,31 @@
-import json
-from base64 import b64encode, b64decode
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from Crypto.Random import get_random_bytes
+from app import App
+import sys
+import logging
 
-#AES
-data = b"secret"
-key = get_random_bytes(16)
-cipher = AES.new(key, AES.MODE_CBC)
-ct_bytes = cipher.encrypt(pad(data, AES.block_size))
-iv = b64encode(cipher.iv).decode('utf-8')
-ct = b64encode(ct_bytes).decode('utf-8')
-result = json.dumps({'iv':iv, 'ciphertext':ct})
-print(result)
+def main():
+    logging.basicConfig(level=logging.DEBUG)
+    app = App()
+    arg_len = len(sys.argv)
+    command = sys.argv[1]
 
-try:
-    b64 = json.loads(result)
-    iv = b64decode(b64['iv'])
-    ct = b64decode(b64['ciphertext'])
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    pt = unpad(cipher.decrypt(ct), AES.block_size)
-    print("The message was: ", pt.decode("utf-8"))
-except (ValueError, KeyError):
-    print("Incorrect decryption")
+    if command == "send":
+        if arg_len < 4:
+            logging.exception(f"Not enough arguments for send command. Expected: 2 got {arg_len - 2}")
+            return
+        filename = sys.argv[2]
+        encryption = sys.argv[3]
+        logging.info("sending file..")
+        # app.send_file(filename, encryption)
 
-#DES
-from Crypto.Cipher import DES
+        logging.info("file sent successfully!")
 
-key = b'-8B key-'
-cipher = DES.new(key, DES.MODE_OFB)
-plaintext = b'sona si latine loqueris '
-msg = cipher.iv + cipher.encrypt(plaintext)
+    elif command == "receive":
+        app.receive_file()
+    
+    else:
+        logging.exception(f"Command not found for {command}")
+        return
 
-#RC4
-from Crypto.Cipher import ARC4
-from Crypto.Hash import SHA
-from Crypto.Random import get_random_bytes
 
-key = b'Very long and confidential key'
-nonce = get_random_bytes(16)
-tempkey = SHA.new(key+nonce).digest()
-cipher = ARC4.new(tempkey)
-msg = nonce + cipher.encrypt(b'Open the pod bay doors, HAL')
+if __name__ == "__main__":
+    main()
