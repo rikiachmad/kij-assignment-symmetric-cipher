@@ -12,15 +12,23 @@ def main():
         if arg_len < 4:
             logging.exception(f"Not enough arguments for send command. Expected: 2 got {arg_len - 2}")
             return
-        filename = sys.argv[2]
-        encryption = sys.argv[3]
-        logging.info("sending file..")
-        app.send_file(filename, encryption)
+        try:
+            filename = sys.argv[2]
+            cipher = sys.argv[3]
+            logging.info("sending file..")
+            app.send_file(filename, cipher)
+        except Exception as e:
+            logging.exception(e)
+            return
 
         logging.info("file sent successfully!")
 
     elif command == "receive":
-        app.receive_file()
+        try:
+            app.receive_file()
+        except Exception as e:
+            logging.exception(e)
+            return
         logging.info("file received succesfully!")
     
     else:
