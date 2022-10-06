@@ -14,17 +14,17 @@ class Server:
     def receive_file(self):
         self.s.listen(5)
         logging.info((f"Listening as {self.host}:{self.port}..."))
+        logging.info((f"Waiting for connection..."))
         client_socket, address = self.s.accept()
         logging.info(f"{address} is connected.")
 
         received = client_socket.recv(self.BUFFER_SIZE).decode()
-        filename, filesize = received.split(self.SEPARATOR)
+        self.in_filename, self.out_filename, self.filesize, self.cipher = received.split(self.SEPARATOR)
 
-        filename = os.path.basename(filename)
-        filesize = int(filesize)
+        filesize = int(self.filesize)
 
-        progress = tqdm.tqdm(range(filesize), f"Receiving {filename}", unit="B", unit_scale=True, unit_divisor=1024)
-        with open(filename, "wb") as f:
+        progress = tqdm(range(filesize), f"Receiving {self.out_filename}", unit="B", unit_scale=True, unit_divisor=1024)
+        with open(self.out_filename, "wb") as f:
             while True:
                 bytes_read = client_socket.recv(self.BUFFER_SIZE)
                 if not bytes_read:    
@@ -32,9 +32,7 @@ class Server:
                 f.write(bytes_read)
                 progress.update(len(bytes_read))
 
-        # close the client socket
         client_socket.close()
-        # close the server socket
         self.s.close()
 
     def get_host(self):
@@ -49,3 +47,6 @@ class Server:
     
     def set_port(self, port):
         self.port = port
+
+    def get_info(self):
+        return self.in_filename, self.out_filename, self.cipher
