@@ -18,7 +18,7 @@ class App:
         client = Client(port = 5001)
         client.send_file(os.path.basename(in_filename),out_filename, cipher)
 
-        logging.info(f"Total Encryption time: {encryptor.get_enc_time()}")
+        logging.info(f"Total Encryption time: {encryptor.get_enc_time()} nanoseconds")
         
     def receive_file(self):
         server = Server(port = 5001)
@@ -29,6 +29,6 @@ class App:
         decryptor = Encdec(cipher, self.chunksize)
         decryptor.decrypt_file(in_filename, out_filename)
 
-        logging.info(f"Total Decryption time: {decryptor.get_dec_time()}")
+        logging.info(f"Total Decryption time: {decryptor.get_dec_time()} nanoseconds")
     def file_exist(self, filename):
         return os.path.isfile(filename)
