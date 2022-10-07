@@ -10,7 +10,7 @@ class App:
     def send_file(self, in_filename, cipher):
         if not self.file_exist(in_filename):
             raise Exception(f'File {in_filename} does not exist.')
-        print("path: ", in_filename)
+            
         encryptor = Encdec(cipher, self.chunksize)
         out_filename = os.path.basename(in_filename) + '.enc'
         encryptor.encrypt_file(in_filename, out_filename)

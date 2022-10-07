@@ -1,7 +1,6 @@
-import os, time
+import time
 from telnetlib import EC
 from Crypto.Cipher import AES, DES, ARC4
-from Crypto.Util.Padding import pad, unpad
 from base64 import b64encode, b64decode
 
 class Encdec:
