@@ -17,7 +17,7 @@ class Client:
         filesize = os.path.getsize(out_filename)
         self.s.send(f"{in_filename}{self.SEPARATOR}{out_filename}{self.SEPARATOR}{filesize}{self.SEPARATOR}{cipher}".encode())
 
-        progress = tqdm(range(filesize), f"Sending {out_filename}", unit="B", unit_scale=True, unit_divisor=1024)
+        progress = tqdm(range(filesize), f"Sending {out_filename}", unit="B", unit_scale=True, unit_divisor=1024, colour="green")
         
         with open(out_filename, "rb") as f:
             while True:
