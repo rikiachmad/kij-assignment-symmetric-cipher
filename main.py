@@ -24,12 +24,13 @@ def main():
         logging.info("file sent successfully!")
 
     elif command == "receive":
-        try:
-            app.receive_file()
-        except Exception as e:
-            logging.exception(e)
-            return
-        logging.info("file received succesfully!")
+        while True:
+            try:
+                app.receive_file()
+            except Exception as e:
+                logging.exception(e)
+                return
+            logging.info("file received succesfully!")
     
     else:
         logging.exception(f"Command not found for {command}")
