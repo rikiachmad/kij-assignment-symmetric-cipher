@@ -12,27 +12,28 @@ class Server:
         self.s.bind((host, port))
 
     def receive_file(self):
-        self.s.listen(5)
-        logging.info((f"Listening as {self.host}:{self.port}..."))
-        logging.info((f"Waiting for connection..."))
-        client_socket, address = self.s.accept()
-        logging.info(f"{address} is connected.")
+        while True:
+            self.s.listen(5)
+            logging.info((f"Listening as {self.host}:{self.port}..."))
+            logging.info((f"Waiting for connection..."))
+            client_socket, address = self.s.accept()
+            logging.info(f"{address} is connected.")
 
-        received = client_socket.recv(self.BUFFER_SIZE).decode()
-        self.in_filename, self.out_filename, self.filesize, self.cipher = received.split(self.SEPARATOR)
+            received = client_socket.recv(self.BUFFER_SIZE).decode()
+            self.in_filename, self.out_filename, self.filesize, self.cipher = received.split(self.SEPARATOR)
 
-        filesize = int(self.filesize)
+            filesize = int(self.filesize)
 
-        progress = tqdm(range(filesize), f"Receiving {self.out_filename}", unit="B", unit_scale=True, unit_divisor=1024)
-        with open(self.out_filename, "wb") as f:
-            while True:
-                bytes_read = client_socket.recv(self.BUFFER_SIZE)
-                if not bytes_read:    
-                    break
-                f.write(bytes_read)
-                progress.update(len(bytes_read))
+            progress = tqdm(range(filesize), f"Receiving {self.out_filename}", unit="B", unit_scale=True, unit_divisor=1024)
+            with open(self.out_filename, "wb") as f:
+                while True:
+                    bytes_read = client_socket.recv(self.BUFFER_SIZE)
+                    if not bytes_read:
+                        break
+                    f.write(bytes_read)
+                    progress.update(len(bytes_read))
 
-        # client_socket.close()
+            client_socket.close()
         # self.s.close()
 
     def get_host(self):
