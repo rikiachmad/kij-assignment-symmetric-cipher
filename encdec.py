@@ -36,9 +36,9 @@ class Encdec:
                         chunk = infile.read(self.chunk_size)
                         if len(chunk) == 0:
                             break
-                        start = time.time_ns()
+                        start = time.perf_counter_ns()
                         enc_chunk = self.object.encrypt(chunk)
-                        end = time.time_ns()
+                        end = time.perf_counter_ns()
 
                         self.enc_time+=(end - start)
                         outfile.write(b64encode(enc_chunk))
@@ -55,9 +55,9 @@ class Encdec:
                         if len(chunk) == 0:
                             break
                         
-                        start = time.time_ns()
+                        start = time.perf_counter_ns()
                         dec_chunk = self.object.decrypt(chunk)
-                        end = time.time_ns()
+                        end = time.perf_counter_ns()
 
                         self.dec_time+=(end - start)
                         outfile.write(dec_chunk)          
