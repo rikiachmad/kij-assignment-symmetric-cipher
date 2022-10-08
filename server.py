@@ -32,8 +32,8 @@ class Server:
                 f.write(bytes_read)
                 progress.update(len(bytes_read))
 
-        client_socket.close()
-        self.s.close()
+        # client_socket.close()
+        # self.s.close()
 
     def get_host(self):
         return self.host
