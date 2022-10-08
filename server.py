@@ -23,7 +23,7 @@ class Server:
 
         filesize = int(self.filesize)
 
-        progress = tqdm(range(filesize), f"Receiving {self.out_filename}", unit="B", unit_scale=True, unit_divisor=1024, colour="pink")
+        progress = tqdm(range(filesize), f"Receiving {self.out_filename}", unit="B", unit_scale=True, unit_divisor=1024, colour="green")
         with open(self.out_filename, "wb") as f:
             while True:
                 bytes_read = client_socket.recv(self.BUFFER_SIZE)
