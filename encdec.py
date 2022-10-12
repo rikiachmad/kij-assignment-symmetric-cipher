@@ -41,7 +41,7 @@ class Encdec:
                         end = time.perf_counter_ns()
 
                         self.enc_time+=(end - start)
-                        outfile.write(b64encode(enc_chunk))
+                        outfile.write(enc_chunk)
         except Exception as e:
             raise Exception(e)
 
@@ -51,7 +51,7 @@ class Encdec:
             with open(out_filename, 'rb') as infile:
                 with open(in_filename, 'wb') as outfile:
                     while True:
-                        chunk = b64decode(infile.read(self.chunk_size))
+                        chunk = infile.read(self.chunk_size)
                         if len(chunk) == 0:
                             break
                         
